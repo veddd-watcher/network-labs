@@ -10,12 +10,16 @@ Captured an ICMP ping from my Mac to google.com with Wireshark to see how a loca
 
 
 <img width="1710" height="1107" alt="capture" src="https://github.com/user-attachments/assets/9843b847-d4b4-486d-8d31-5e484d9c34da" />
-- 
+
+
 ## What this shows
 Google isn't on my local network, so my Mac sends the frame to its default gateway (the router). The destination IP stays Google's, while the destination MAC is the router's, since the router is the next hop. At each hop, the MAC addresses are rewritten and the destination IP stays the same.
 
 ## Verification
 arp -a shows 192.168.1.1 at 98:9d:b2:31:1b:51, matching the destination MAC in the capture.
+## Reply packet
+The echo reply (frame 587) swaps the addresses: source IP 142.251.43.46 (Google), destination IP 192.168.1.13 (my Mac). On the last hop the source MAC is my router (98:9d:b2:31:1b:51) and the destination MAC is my Mac (de:7b:02:29:90:cd).
 
+Round-trip time was about 23 ms. The reply TTL was 118, down from a starting value of probably 128, which suggests around 10 routers on the path.
 ## Tools
 Wireshark 4.6.9, macOS Terminal (ping, arp)
